@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonButton, IonContent, IonImg, IonPage } from "@ionic/react";
+import { IonButton, IonContent, IonPage } from "@ionic/react";
 import {
   CameraResultType,
   Camera,
@@ -11,6 +11,17 @@ import {
 interface DashboardProps {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+const CapturedImage = ({ photo }: {photo?: Photo }) => {
+  if (!photo) return <></>;
+
+    return (
+      <img
+        src={`data:image/${photo.format};base64,${photo.base64String}`}
+        alt=""
+      />
+    );
+};
 
 const Dashboard = (props: DashboardProps) => {
   const { setIsLoggedIn } = props;
@@ -46,23 +57,12 @@ const Dashboard = (props: DashboardProps) => {
     setIsLoggedIn(false);
   };
 
-  const renderCapturedImage = () => {
-    if (!photo) return <></>;
-
-    return (
-      <img
-        src={`data:image/${photo.format};base64,${photo.base64String}`}
-        alt=""
-      />
-    );
-  };
-
   return (
     <IonPage>
       <IonContent>
         Dashboard (Logged In)
         <IonButton onClick={() => handleLogin()}>Log Out</IonButton>
-        {renderCapturedImage()}
+        <CapturedImage photo={photo} />
       </IonContent>
     </IonPage>
   );

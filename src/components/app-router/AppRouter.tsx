@@ -6,9 +6,9 @@ import {
   IonTabs,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { Redirect, Route } from "react-router";
-import Dashboard from "../dashboard/Dashboard";
-import Login from "../login/Login";
+import { Route } from "react-router";
+import Dashboard from "../../pages/dashboard/Dashboard";
+import Login from "../../pages/login/Login";
 
 const AppRouter: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

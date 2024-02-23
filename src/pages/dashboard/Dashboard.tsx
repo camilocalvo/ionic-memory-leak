@@ -12,21 +12,31 @@ interface DashboardProps {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CapturedImage = ({ photo }: {photo?: Photo }) => {
-  if (!photo) return <></>;
+interface ImageAttachment {
+  name: string;
+  fileExtension: string;
+  data: string;
+}
 
-    return (
-      <img
-        src={`data:image/${photo.format};base64,${photo.base64String}`}
-        alt=""
-      />
-    );
+const CapturedImage = ({
+  imageAttachment,
+}: {
+  imageAttachment?: ImageAttachment;
+}) => {
+  if (!imageAttachment) return <></>;
+
+  return (
+    <img
+      src={`data:image/${imageAttachment.fileExtension};base64,${imageAttachment.data}`}
+      alt=""
+    />
+  );
 };
 
 const Dashboard = (props: DashboardProps) => {
   const { setIsLoggedIn } = props;
 
-  const [photo, setPhoto] = useState<Photo | undefined>(undefined);
+  const [images, setImages] = useState<Array<ImageAttachment>>([]);
 
   const takePhoto = async () => {
     await Camera.getPhoto({
@@ -42,7 +52,16 @@ const Dashboard = (props: DashboardProps) => {
       direction: CameraDirection.Rear,
     })
       .then((photo) => {
-        setPhoto(photo);
+        if (!photo.base64String) return;
+
+        const newImage: ImageAttachment = {
+          name: "test",
+          fileExtension: photo.format,
+          data: photo.base64String,
+        };
+
+        const newImages = [...images, newImage];
+        setImages(newImages);
       })
       .catch((error) => {
         console.error(error.message);
@@ -62,7 +81,9 @@ const Dashboard = (props: DashboardProps) => {
       <IonContent>
         Dashboard (Logged In)
         <IonButton onClick={() => handleLogin()}>Log Out</IonButton>
-        <CapturedImage photo={photo} />
+        {images?.map((image, index) => {
+          return <CapturedImage key={index} imageAttachment={image} />;
+        })}
       </IonContent>
     </IonPage>
   );

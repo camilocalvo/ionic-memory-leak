@@ -20,10 +20,8 @@ const AppRouter: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Redirect path={"/"} to={"/tabs/home"} />
-        <Redirect path={"/home"} to={"/tabs/home"} />
         <Route
-          path={"/tabs/home"}
+          path={"/"}
           render={() => <Dashboard setIsLoggedIn={setIsLoggedIn} />}
         />
       </IonRouterOutlet>

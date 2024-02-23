@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  IonButton,
-  IonContent,
-  IonImg,
-  IonItem,
-  IonList,
-  IonPage,
-} from "@ionic/react";
+import { IonButton, IonContent, IonImg, IonPage } from "@ionic/react";
 import {
   CameraResultType,
   Camera,
@@ -57,7 +50,7 @@ const Dashboard = (props: DashboardProps) => {
     if (!photo) return <></>;
 
     return (
-      <IonImg
+      <img
         src={`data:image/${photo.format};base64,${photo.base64String}`}
         alt=""
       />

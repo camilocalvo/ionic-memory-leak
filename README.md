@@ -1,12 +1,12 @@
 ## Ionic Memory Leak Reproduction Repository
 
 ### Current Behavior
-The user logs in, then loads an image from the camera / camera roll / file system (using @capacitor/Camera) and adds it into the useState. This prompts an <img> HTML element to appear with the new image as its src. When the user logs out, the image is still present in memory, attached to a chain of detached HTML nodes and elements.
+The user logs in and loads an image from the camera / camera roll / file system (using @capacitor/Camera), after which it is added into the useState. This prompts an <img> HTML element to appear with the new image as its src. When the user logs out, the image and its base64 string are still present in memory, attached to a chain of detached HTML nodes and elements.
 
 ![detached-html-elements](https://github.com/camilocalvo/ionic-memory-leak/assets/21162110/92c6b4eb-2084-4a3f-af56-ba60454062a9)
 
 ### Expected Behavior
-Resources (heap memory and DOM nodes) should not leak when exiting an IonPage.
+Upon logging out, the image should be destroyed, as there should be nothing referencing it in memory. Resources (heap memory and DOM nodes) should not leak when moving to a different location in the router.
 
 ### Steps to Reproduce
 

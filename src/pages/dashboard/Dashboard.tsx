@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { IonButton, IonContent, IonPage } from "@ionic/react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CameraResultType,
   Camera,
   CameraSource,
   CameraDirection,
-  Photo,
 } from "@capacitor/camera";
+import { addImage, saveImage } from "../../store/actions";
+import { imageStateSelector } from "../../selectors/imageStateSelector";
 
 interface DashboardProps {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,7 +38,10 @@ const CapturedImage = ({
 const Dashboard = (props: DashboardProps) => {
   const { setIsLoggedIn } = props;
 
+  const dispatch = useDispatch();
+
   const [images, setImages] = useState<Array<ImageAttachment>>([]);
+  const { images: reduxImages } = useSelector(imageStateSelector);
 
   const takePhoto = async () => {
     await Camera.getPhoto({
@@ -62,6 +67,7 @@ const Dashboard = (props: DashboardProps) => {
 
         const newImages = [...images, newImage];
         setImages(newImages);
+        dispatch(addImage(newImage.data));
       })
       .catch((error) => {
         console.error(error.message);
@@ -72,7 +78,11 @@ const Dashboard = (props: DashboardProps) => {
     takePhoto();
   }, []);
 
-  const handleLogin = () => {
+  const onClickSaveImage = () => {
+    dispatch(saveImage());
+  };
+
+  const handleLogout = () => {
     setIsLoggedIn(false);
   };
 
@@ -80,7 +90,10 @@ const Dashboard = (props: DashboardProps) => {
     <IonPage>
       <IonContent>
         Dashboard (Logged In)
-        <IonButton onClick={() => handleLogin()}>Log Out</IonButton>
+        <div style={{ marginTop: "3rem" }}>
+          <IonButton onClick={() => onClickSaveImage()}>Save Image</IonButton>
+          <IonButton onClick={() => handleLogout()}>Log Out</IonButton>
+        </div>
         {images?.map((image, index) => {
           return <CapturedImage key={index} imageAttachment={image} />;
         })}

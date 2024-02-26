@@ -31,6 +31,7 @@ const CapturedImage = ({
     <img
       src={`data:image/${imageAttachment.fileExtension};base64,${imageAttachment.data}`}
       alt=""
+      id='captured-image' 
     />
   );
 };
@@ -76,10 +77,18 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     takePhoto();
+
+    return () => {
+      document?.getElementById('captured-image')?.removeAttribute('src');
+    }
   }, []);
 
   const onClickSaveImage = () => {
     dispatch(saveImage());
+  };
+
+  const onClickClearImages = () => {
+    setImages([]);
   };
 
   const handleLogout = () => {
@@ -92,6 +101,7 @@ const Dashboard = (props: DashboardProps) => {
         Dashboard (Logged In)
         <div style={{ marginTop: "3rem" }}>
           <IonButton onClick={() => onClickSaveImage()}>Save Image</IonButton>
+          <IonButton onClick={() => onClickClearImages()}>Clear Images</IonButton>
           <IonButton onClick={() => handleLogout()}>Log Out</IonButton>
         </div>
         {images?.map((image, index) => {
